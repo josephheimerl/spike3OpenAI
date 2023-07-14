@@ -1,0 +1,75 @@
+:root {
+    --tooltip-float-distance: 10px;
+}
+
+.profile-pic {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    margin: 0;
+    padding: 0;
+}
+
+.profile-pic:hover {
+    box-shadow: 0 0 0 3px rgba(174, 174, 174, 0.461);
+    cursor: pointer;
+}
+
+#sign-in::before,
+#sign-in::after {
+    position: absolute;
+    transition: opacity 0.2s ease-in-out;
+    pointer-events: none;
+    z-index: 999;
+    opacity: 0;
+}
+
+#sign-in::after {
+    content: attr(data-hover);
+    background-color: rgba(78, 78, 78, 0.5);
+    top: calc(100% + var(--tooltip-float-distance));
+    right: 0;
+    min-width: 50px;
+    padding: 7px;
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+    border-radius: 10px;
+    white-space: nowrap;
+}
+
+#sign-in::before {
+    content: '';
+    position: absolute;
+    border-bottom: 6px solid rgba(78, 78, 78, 0.5);
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    width: 0;
+    height: 0;
+    right: 50%;
+    transform: translateX(50%);
+    bottom: calc(-1* var(--tooltip-float-distance));
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+}
+
+#sign-in:hover::after,
+#sign-in:hover::before {
+    opacity: 1;
+}
+
+/* .login-dropdown {
+    position: absolute;
+    display: inline-flex;
+    flex-direction: column;
+    z-index: 999;
+    top: calc(100% + 10px);
+    right: 0;
+    border-radius: 10px;
+
+
+    background-color: gray;
+    width: 100px;
+    height: 100px;
+
+} */
+

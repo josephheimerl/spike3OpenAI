@@ -1,0 +1,348 @@
+.title{
+  text-align: center;
+}
+
+.center {
+  display: flex;
+  justify-content: center;
+}
+
+.block {
+  display: block;
+}
+
+.mx1 {
+  margin-right: 10px;
+  margin-left: 10px;
+}
+
+.p1 {
+  padding: 8px;
+}
+
+.subtitle {
+  text-align: center;
+  font-size: larger;
+  text-decoration: underline;
+}
+
+.container {
+  border: 4px;
+  border-style: solid;
+  padding: 10px;
+  margin: 0% 25%;
+}
+
+.pyscript {
+  margin: 20px 25%;
+}
+
+.lds-dual-ring {
+  display: inline-block;
+  width: 80px;
+  height: 80px;
+}
+.lds-dual-ring:after {
+  content: " ";
+  display: block;
+  width: 64px;
+  height: 64px;
+  margin: 8px;
+  border-radius: 50%;
+  border: 6px solid #000;
+  border-color: #000 transparent #000 transparent;
+  animation: lds-dual-ring 1.2s linear infinite;
+}
+
+@keyframes lds-dual-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Joseph code below */
+:root {
+  --head-color: rgb(245, 245, 245);
+  --break-info: 2px solid rgb(208, 208, 208);
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+/* Heading Bar */
+
+.head {
+  position: fixed;
+  width: 100%;
+  z-index: 999;
+}
+
+.top-bar {
+  background-color: rgb(60, 144, 237);
+  height: 20px;
+  width: 100%;
+  top: 0;
+  left: 0;
+}
+
+
+.title-bar {
+  position:relative;
+  display: flex;
+  box-sizing: border-box;
+  background-color: var(--head-color);
+  padding: 15px;
+  font-family: Arial, Helvetica, sans-serif;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  border-bottom: var(--break-info);
+}
+
+#root {
+  position: absolute;
+  left: 10px;
+  margin: 0px;
+  top:50%;
+  transform: translateY(-50%);
+}
+
+.center-title {
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+
+#sign-in {
+  display: inline-block;
+  height: 56px;
+  width: 56px;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+
+/* Body */
+
+.two-col-page-body {
+  display: flex;
+  margin: 10px;
+  margin-top: 65px;
+  margin-bottom: 30px;
+  font-family: Arial, Helvetica, sans-serif;
+  justify-content: space-around;
+  
+}
+
+.two-col-page-body-col {
+  width: 40%;
+}
+
+/* Prompt Box */
+.toggle-list {
+  display: inline-block;
+  position: relative;
+}
+
+.caret {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  margin-left: 2px;
+  vertical-align: middle;
+  border-top: 4px solid;
+  border-right: 4px solid transparent;
+  border-left: 4px solid transparent;
+  transition: all 0.3s;
+}
+
+.caret.open {
+  transform: rotate(180deg);
+}
+
+.dropdown-menu {
+  position: absolute;
+  visibility: hidden;
+  width: 11em;
+  box-sizing: border-box;
+  max-height: 0px;
+  background-color:rgb(255, 255, 255);
+  z-index: 1;
+  overflow: scroll;
+  padding: 5px 10px;
+  transition: max-height 0.3s ease-in-out;
+  box-shadow: 0px 1px 20px rgba(0, 0, 0, 0.5);
+  border-radius: 0.5em;
+
+  transition: all 0.3s;
+}
+
+.dropdown-menu.open {
+  visibility: visible;
+  z-index: 999;
+  max-height: 200px;
+}
+
+
+.check-element {
+  display: block;
+  padding: 20px 0;
+  border-bottom: 1px solid rgb(163, 163, 163);
+}
+
+
+.gpt-prompt-box {
+  min-height: 20px;
+  max-height: 100px;
+  width: 100%;
+  resize: none;
+  overflow-y: auto;
+  border-radius: 0.5em;
+  box-sizing: border-box;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+
+/* Buttons */
+
+.button-panel {
+  display: flex;
+  justify-content: space-between;
+}
+
+.button {
+  font-size: large;
+  cursor: pointer;
+  transition: background-color 0.5s ease;
+  border-radius: 0.5em;
+  border: 0;
+  color: white;
+  padding: 7px;
+}
+
+.button.generic {
+  color:#000;
+}
+
+.button:disabled {
+  background-color: rgb(208, 208, 208);
+  cursor: not-allowed;
+  animation: breathe 3s infinite ease-in-out;
+}
+
+@keyframes breathe {
+  0% { background-color: rgb(200, 200, 200); }
+  50% { background-color:rgb(157, 157, 157); }
+  100% { background-color: rgb(200, 200, 200); }
+}
+
+.button.prompt {
+  background-color:rgb(48, 132, 227);
+  /* border: 1px solid rgb(25, 120, 229); */
+}
+
+.button.prompt:hover {
+  background-color:rgb(38, 101, 173);
+}
+
+.button.run {
+  background-color:rgb(65, 168, 45);
+  /* border: 1px solid rgb(6, 190, 25); */
+}
+
+.button.run:hover {
+  background-color:rgb(56, 143, 38);
+}
+
+.button.clear {
+  background-color:rgb(209, 69, 61);
+  /* border: 1px solid rgb(229, 25, 25); */
+}
+
+.button.clear:hover {
+  background-color:rgb(166, 53, 47);
+}
+
+#assumptionsBox {
+  background-color:rgb(245, 245, 245);
+  min-height: 50px;
+  max-height: 300px;
+  width: inherit;
+  overflow: auto;
+  white-space: pre;
+  padding: 5px;
+}
+
+#code-div {
+  margin: 0;
+}
+
+#code-block {
+  width: 100%;
+  overflow: auto;
+  height: 500px;
+  background-color: #f5f2f0;
+  white-space: pre;
+  position: relative;
+  margin: 0;
+  padding: 0;
+}
+
+#aceEditor {
+  position:absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  margin:0;
+  padding:0;
+  background-color: #f5f2f0;
+}
+
+.page-bottom {
+  background-color: var(--head-color);
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 20px;
+  position: fixed;
+  bottom: 0;
+  border-top: var(--break-info);
+  z-index: 999;
+}
+
+.show {
+  display: block;
+}
+
+
+#repl {
+  background-color: rgb(245, 245, 245);
+  display:block;
+  position: relative;
+  width: 100%;
+  height: 200px;
+  margin: 0;
+  padding: 0;
+}
+
+#replWindow {
+  position:absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  margin:0;
+  padding:0;
+  background-color: #f5f2f0;
+}

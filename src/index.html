@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Command SPIKE w/ GPT</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="loginButton.css" />
+    <script
+      defer
+      src="./src-min-noconflict/ace.js"
+      type="text/javascript"
+      charset="utf-8"
+    ></script>
+    <script type="module" defer src="index.js"></script>
+
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/gh/gabrielsessions/pyrepl-js/build/main.js"
+    ></script>
+  </head>
+
+  <body>
+    <div class="head">
+      <div id="bar" class="top-bar"></div>
+      <div id="title-bar" , class="title-bar">
+        <div id="root"></div>
+        <h1 id="title" class="center-title">Command SPIKE w/ GPT</h1>
+        <div id="sign-in" data-hover="Sign in"></div>
+      </div>
+    </div>
+    <br />
+    <div class="two-col-page-body">
+      <div class="two-col-page-body-col">
+        <h4>How to use:</h4>
+        <p>
+          Type what you want your SPIKE robot to do in the text box below, and
+          after a few seconds code will be generated and displayed in the block
+          to the right. Edit the code if you would like, and when you are ready
+          and press the 'Run Code' button to run the code on the SPIKE.
+        </p>
+        <p>
+          If the AI made any assumptions when writing the code, ie. which ports
+          sensors should be plugged in to, it will be displayed in the
+          assumptions box
+        </p>
+
+        <br />
+        <h4>Setup:</h4>
+        <ul>
+          <li>
+            Connect a SPIKE Hub to this computer over USB and link it using the
+            button in the top left of the page
+          </li>
+          <li>
+            Click on the modules button and ensure that all of the modules that
+            might be needed for your code are checked
+          </li>
+        </ul>
+        <div class="toggle-list" id="moduleDropdownMenu">
+          <button class="generic button" id="toggleModules">
+            Modules <i class="caret"></i>
+          </button>
+          <!-- module support dropdown -->
+          <div class="dropdown-menu">
+            <div class="check-element">
+              <input type="checkbox" id="motorCheckbox" checked />
+              <label for="motorCheckbox">Motor</label>
+            </div>
+            <div class="check-element">
+              <input type="checkbox" id="distanceSensorCheckbox" />
+              <label for="distanceSensorCheckbox">Distance Sensor</label>
+            </div>
+            <div class="check-element">
+              <input type="checkbox" id="hubCheckbox" checked />
+              <label for="hubCheckbox">Hub</label>
+            </div>
+            <div class="check-element">
+              <input type="checkbox" id="portCheckbox" checked />
+              <label for="portCheckbox">Port</label>
+            </div>
+            <div class="check-element">
+              <input type="checkbox" id="motionSensorCheckbox" />
+              <label for="motionSensorCheckbox">Motion Sensor</label>
+            </div>
+            <div class="check-element">
+              <input type="checkbox" id="soundCheckbox" />
+              <label for="soundCheckbox">Sound</label>
+            </div>
+            <div class="check-element">
+              <input type="checkbox" id="buttonCheckbox" />
+              <label for="buttonCheckbox">Button</label>
+            </div>
+            <div class="check-element">
+              <input type="checkbox" id="forceSensorCheckbox" />
+              <label for="forceSensorCheckbox">Force Sensor</label>
+            </div>
+            <div class="check-element">
+              <input type="checkbox" id="colorSensorCheckbox" />
+              <label for="colorSensorCheckbox">Color Sensor</label>
+            </div>
+            <div class="check-element" style="border-bottom: 0">
+              <input type="checkbox" id="runloopCheckbox" />
+              <label for="runloopCheckbox">Runloop</label>
+            </div>
+          </div>
+        </div>
+        <textarea
+          id="promptBox"
+          name="promptBox"
+          class="gpt-prompt-box"
+        ></textarea>
+        <br />
+        <div class="button-panel">
+          <button id="submitPrompt" class="button prompt">Submit Prompt</button>
+
+          <button id="runCode" class="button run">Run Code</button>
+
+          <button id="clearCode" class="button clear">Clear Code</button>
+        </div>
+        <br />
+        <br />
+        <h4>SPIKE REPL:</h4>
+        <div id="repl">
+          <pre id="replWindow">Connect SPIKE to view REPL</pre>
+        </div>
+        <br />
+        <button id="ctrlC" class="generic button">ctrlC (Abort)</button>
+        <button id="refreshREPL" class="generic button">Refresh REPL</button>
+      </div>
+      <div class="two-col-page-body-col">
+        <div>
+          <h4>Assumptions:</h4>
+          <div id="assumptionsBox"></div>
+        </div>
+        <div id="code-div">
+          <h4>Generated Code:</h4>
+          <div id="code-block">
+            <pre id="aceEditor"></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="page-bottom"></div>
+  </body>
+</html>
