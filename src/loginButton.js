@@ -1,6 +1,7 @@
 // login button object for setting up firebase authentication
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
 import { getAuth, signInWithPopup, createUserWithEmailAndPassword, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-auth.js";
+import { firebaseConfig } from "./secrets.js"
 
 export default class loginButton {
     constructor(buttonID) {
@@ -16,7 +17,7 @@ export default class loginButton {
         this.#initialRender();
 
 
-        this.firebaseApp = initializeApp(this.#firebaseConfig);
+        this.firebaseApp = initializeApp(firebaseConfig);
         this.auth = getAuth(this.firebaseApp);
         this.provider = new GoogleAuthProvider();
         this.buttonDiv.addEventListener("click", (event) => {
@@ -97,16 +98,6 @@ export default class loginButton {
             // this.dropdown.innerHTML = this.#dropdownHTML.loggedOut
           }
     }
-
-    #firebaseConfig = {
-      apiKey: "AIzaSyBj_GV9lYp0Ky39SpLmeCC8bGVIlKJEmuA",
-      authDomain: "pyrepl.firebaseapp.com",
-      projectId: "pyrepl",
-      storageBucket: "pyrepl.appspot.com",
-      messagingSenderId: "379036205185",
-      appId: "1:379036205185:web:48cc194bf92118966c0d80",
-      measurementId: "G-LQY8BRPEC8"
-    };
 
     // #dropdownHTML = {
     //     loggedIn: `
