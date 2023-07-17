@@ -77,6 +77,10 @@ This module has 3 functions:
 
 The functions in this module are as follows:
 'raw_rgbi(port)' returns the overall color intensity and intensity of red green and blue, returning a tuple of four integers corresponding to red, green, blue, and overall intensities respectively. The 'port' argument refers to a port from the 'port' submodule of the 'hub' module, indicating the port on the Lego SPIKE the sensor is plugged in to.
+'color(port)' returns an integer coresponding to the constant associated with a color from the 'color' module. The port argument is the same concept as described above.
+
+The 'color' module is a module which contains constants pertaining to certain colors, and contains no functions.
+The constants which can be used are as follows: BLACK, MAGENTA, PURPLE, BLUE, AZURE, TURQUOISE, GREEN, YELLOW, ORANGE, RED, WHITE, UNKNOWN
 
 `}], runloopDoc : [
     {role: "system", content: `This message is about the 'runloop' module. It allows the writing and execution of asynchronous code on the new SPIKE 3 software.

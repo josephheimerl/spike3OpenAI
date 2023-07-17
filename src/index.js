@@ -197,6 +197,6 @@ function hideLoad() {
 }
 
 function abortCode() {
-  window.pyrepl.write = "motor.stop()"
-  window.pyrepl.stop
+  window.pyrepl.rawWrite = "\x03\r\n";
+  window.pyrepl.write = `import motor\nmotor.stop()`;
 }

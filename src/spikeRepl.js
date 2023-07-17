@@ -12,6 +12,11 @@ export default class spikeRepl {
         this.replEditor.setReadOnly(true);
 
         this.intervalID = null;
+
+
+        this.logString = '';
+        // window.pyrepl.consoleStream = this._newDataCallback.bind(this);
+        
     }
     writeToRepl(msg) {
         this.replEditor.setValue(msg);
@@ -42,4 +47,13 @@ export default class spikeRepl {
             this.stopStream();
         }
     }
+
+    _newDataCallback(data) {
+        this.logString += data;
+        if(this.logString) {
+            this.writeToRepl(this.logString);
+        }
+    }
+
+
 }
