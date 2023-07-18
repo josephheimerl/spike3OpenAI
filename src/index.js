@@ -9,7 +9,7 @@ textArea.addEventListener('input', function() {
   this.style.height = this.scrollHeight + 'px';
 });
 
-const replWindow = new spikeRepl("replWindow");
+const replWindow = new spikeRepl("repl");
 const loginWidget = new loginButton("sign-in");
 
 var aceEditor = ace.edit("aceEditor");
@@ -21,8 +21,6 @@ document.querySelector("#toggleModules").addEventListener("click",toggleModules)
 document.querySelector("#submitPrompt").addEventListener("click",sendCommandToGPT);
 document.querySelector("#runCode").addEventListener("click",runCode);
 document.querySelector("#clearCode").addEventListener("click",clearCode);
-document.querySelector("#refreshREPL").addEventListener("click",replWindow._refresh.bind(replWindow));
-document.querySelector("#ctrlC").addEventListener("click",abortCode);
 
 document.addEventListener('DOMContentLoaded', (event) => {
   const savedUserCode = localStorage.getItem('userCode');
@@ -194,9 +192,4 @@ function showLoad() {
 function hideLoad() {
   document.querySelector("#submitPrompt").disabled = false;
   aceEditor.setReadOnly(false);
-}
-
-function abortCode() {
-  window.pyrepl.rawWrite = "\x03\r\n";
-  window.pyrepl.write = `import motor\nmotor.stop()`;
 }

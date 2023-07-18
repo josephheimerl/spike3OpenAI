@@ -20,30 +20,38 @@ export default class loginButton {
         this.firebaseApp = initializeApp(firebaseConfig);
         this.auth = getAuth(this.firebaseApp);
         this.provider = new GoogleAuthProvider();
+        this.provider.setCustomParameters({
+          'prompt': 'select_account'
+        })
         this.buttonDiv.addEventListener("click", (event) => {
+          if (!this.user) {
             signInWithPopup(this.auth, this.provider).then((result) => {
-                // This gives you a Google Access Token. You can use it to access the Google API.
-                const credential = GoogleAuthProvider.credentialFromResult(result);
-                const token = credential.accessToken;
-                // The signed-in user info.
-                const user = result.user;
-                console.log("logged in")
-                // IdP data available using getAdditionalUserInfo(result)
-                // ...
-        
-              }).catch((error) => {
-                const errorCode = error.code;
-                const errorMessage = error.message;
-                // The email of the user's account used.
-                // The AuthCredential type that was used.
-                const credential = error.credential;
-                console.log("error loggin in")
-                console.log(error)
-                console.log(errorCode)
-                console.log(errorMessage)
-                console.log(credential)
-                // ...
-              })
+              // This gives you a Google Access Token. You can use it to access the Google API.
+              const credential = GoogleAuthProvider.credentialFromResult(result);
+              const token = credential.accessToken;
+              // The signed-in user info.
+              const user = result.user;
+              console.log("logged in")
+              // IdP data available using getAdditionalUserInfo(result)
+              // ...
+      
+            }).catch((error) => {
+              const errorCode = error.code;
+              const errorMessage = error.message;
+              // The email of the user's account used.
+              // The AuthCredential type that was used.
+              const credential = error.credential;
+              console.log("error loggin in")
+              console.log(error)
+              console.log(errorCode)
+              console.log(errorMessage)
+              console.log(credential)
+              // ...
+            })
+          } else {
+            this.auth.signOut().then(this.#renderButton()).catch((error)=>console.log(error));
+          }
+          
         })
 
         onAuthStateChanged(this.auth, (user => {
@@ -51,7 +59,7 @@ export default class loginButton {
                 console.log("user");
                 console.log(user);
                 const uid = user.uid;
-                this.user = user
+                this.user = user;
                 this.loginStatus = true;
               } else {
                 this.user = null;
@@ -69,6 +77,7 @@ export default class loginButton {
     async userIDToken() {
       if(this.user && this.user.getIdToken) {
         const id = await this.user.getIdToken(true);
+        return id;
       } else {
         return "";
       }

@@ -224,11 +224,15 @@ body {
 .button {
   font-size: large;
   cursor: pointer;
-  transition: background-color 0.5s ease;
+  transition: background-color 0.3s ease;
   border-radius: 0.5em;
   border: 0;
   color: white;
   padding: 7px;
+}
+
+.button:active {
+  filter: brightness(0.8)
 }
 
 .button.generic {
@@ -280,7 +284,7 @@ body {
   max-height: 300px;
   width: inherit;
   overflow: auto;
-  white-space: pre;
+  white-space: wrap;
   padding: 5px;
 }
 
@@ -324,26 +328,4 @@ body {
 
 .show {
   display: block;
-}
-
-
-#repl {
-  background-color: rgb(245, 245, 245);
-  display:block;
-  position: relative;
-  width: 100%;
-  height: 200px;
-  margin: 0;
-  padding: 0;
-}
-
-#replWindow {
-  position:absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  margin:0;
-  padding:0;
-  background-color: #f5f2f0;
 }
