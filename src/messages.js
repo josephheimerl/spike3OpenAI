@@ -13,21 +13,28 @@ Make sure that the code is thoroughly commented.`},
 - more assumptions
 </Assumptions>
 Ensure that the assumptions block is outside of the python code block
-Also, if for whatever reason the user prompt is confusing or unclear and no code can be generated, expain why in the assumptions section.
+Also, if for whatever reason the user prompt is confusing or unclear or no code can be generated, expain why in the assumptions section.
 `}], motorDoc: [
     {role: "system", content: `This message is about the new SPIKE 3 'motor' module, which may need to be used in the code you write
 To use a motor you must include the statement 'import motor', All functions in the module should be called inside the motor module as a prefix like so: 'motor.run(port.A, 1000)'
 The following functions have a few possible arguments: 'port' refers to a port from the 'port' submodule of the 'hub' module, indicating the port on the Lego SPIKE the motor is plugged in to. 'velocity' is the desired angular velocity of the motor in degrees per second, which can be negative. 'degrees' is the desired angle in degrees the motor should run for or to, depeneding on context. 'duration' is the time in miliseconds the motor should run for.
-To get the absolute position of a motor in degrees, use the function 'absolute_position(port)' which takes the 'port' argument and returns the absolute position of the desired motor in degrees
+If any function is non-blocking, a time.sleep() or another blocking line must be used to ensure the motor can finish the non-blocking task before another task is given to the motor, otherwise the new task will override the old one. If the function is awaitable, it can be awaited if it is called in an async function to make the execution wait for the task to finish before executing subsequent lines in the function. For example, if two run_for_time functions are called for the same motor in a row without a sleep or an await, only the second function will have any effect because it immediately overrides the first one as they are non-blocking. However, if the first line is awaited or there is a sleep for an appropriate amount of time between the lines, both tasks will execute as desired.
 The function 'run(port, velocity)' allows you to run a desired motor to a desired velocity.
-The function 'run_for_time(port, duration, velocity)' allows you to drive a specified motor for a desired length of time. This function is non-blocking and awaitable.
+The function 'run_for_time(port, duration, velocity)' allows you to drive a specified motor at a desired speed for a desired length of time. This function is non-blocking and awaitable.
+The function 'run_for_degrees(port, degrees, velocity)' will move the specified motor the specified amount of degrees at the specified velocity. This function is non-blocking and awiatable.
+The function 'absolute_position(port) -> int' returns the absolute position of the motor plugged into the specified port, in degrees from -180 to 180.
+The function 'relative_position(port) -> int' returns the relative position of the motor plugged into the specified port, in degrees. There is no limit for this range.
+The function 'reset_relative_position(port)' will set the current position of the specified motor to 0 for its relative position.
+The function 'run_to_absolute_position(port, position, velocity)' will turn the motor to the specified absolute position at the specified velocity. This function is non-blocking and awaitable.
+The function 'run_to_relative_position(port, position, velocity)' will turn the motor to the specified relative position at the specified velocity. This function is non-blocking and awaitable.
+The function 'velocity(port) -> int' will return the velocity of the specified motor in deg/sec.
 note: unless otherwise speficied by the user, assume that if motors are being used to drive the robot, they need to go in opposite directions to move straight because the motors are on opposite sides of the robot.
 
 `}], distanceSensorDoc: [
     {role: "system", content: `This message pertains to the new SPIKE 3 distance_sensor module, which may need to be used in the code you write
 The distance_sensor module enables you to detect distances with an attached distance sensor.
 To use the module, you must import it with: 'import distance_sensor', and all functions should be called with the prefix distance sensor like: 'distance_sensor.distance(port.A)'.
-To get the distance reading of the sensor, the function 'distance(port)' must be called, where the port argument 'port' refers to a port from the 'port' submodule of the 'hub' module, indicating the port on the Lego SPIKE the distance sensor is plugged in to. If nothing is in range of the sensor, a -1 is returned. The value it will output if something is pressed up next to it is 40, and the furthest away it can reliably detect is 3 feet, at which distance it will output 500. Anywhere past this it will output either a -1 or a very high number in the thousands.
+To get the distance reading of the sensor, the function 'distance(port) -> int' must be called, where the port argument 'port' refers to a port from the 'port' submodule of the 'hub' module, indicating the port on the Lego SPIKE the distance sensor is plugged in to. The function returns an integer corresponding to the distance from of the object it detects in millimeters. If the sensor cannot read a valid distance, it will return -1.
 
 `}], hubDoc: [
     {role: "system", content:`This message is about the hub module for SPIKE 3, which may need to be used in the code you write
@@ -45,6 +52,9 @@ If port has been imported, use the constant by prefixing the letter with 'port',
     {role: "system", content: `This message is about the 'motion_sensor' submodule of the 'hub' module, which makes use of the SPIKE 3 hub's integrated IMU.
 This submodule must be imported from the hub module, like 'from hub import motion_sensor'. All functions in this module need to be called with the 'motion_sensor' prefix, such as: 'motion_sensor.acceleration()'.
 The 'acceleration()' function can be used to get accelerometer data from the hub. It will return a tuple of 3 integers corresponding to the x,y,z acceleration data respectively. The IMU measures proper acceleration.
+The 'quaternion() -> tuple[float, float, float, float]' function returns the hub orietation quaternion as a tuple[w: float, x: float, y: float, z: float].
+
+Returns the hub orientation quaternion as a tuple[w: float, x: float, y: float, z: float].'
 
 `}], soundDoc: [
     {role: "system", content: `This message is about the 'sound' submodule of the 'hub' module, which may need to be used in the code you write.
@@ -68,15 +78,16 @@ the 'pressed(button)' function returns a boolean stating whether a button is cur
 
 The functions in this module all take one argument: 'port'. The 'port' argument is the constant in the 'port' submodule of the 'hub' module corresponding to the port that the sensor is plugged in to on the hub.
 This module has 3 functions:
-'force(port)' returns the measured force of the force sensor connected to the specified port as a percentage of maximum force.
-'is_pressed(port)' returns a boolean of whether the sensor connected to the specified port is pressed.
-'raw(port)' returns the raw force value of the force sensor connected to the specified port.
+'force(port) -> int' returns the measured force of the force sensor connected to the specified port as a percentage of maximum force.
+'pressed(port) -> bool' returns a boolean of whether the sensor connected to the specified port is pressed.
+'raw(port) -> int' returns the raw force value of the force sensor connected to the specified port.
 
 `}], colorSensorDoc : [
     {role: "system", content: `This message is about the 'color_sensor' module.
 
 The functions in this module are as follows:
-'raw_rgbi(port)' returns the overall color intensity and intensity of red green and blue, returning a tuple of four integers corresponding to red, green, blue, and overall intensities respectively. The 'port' argument refers to a port from the 'port' submodule of the 'hub' module, indicating the port on the Lego SPIKE the sensor is plugged in to.
+'reflection(port) -> int' returns the intensity of the reflected light from 0-100.
+'raw_rgbi(port) -> tuple[int, int, int, int]' returns the overall color intensity and intensity of red green and blue, returning a tuple of four integers corresponding to red, green, blue, and overall intensities respectively. The 'port' argument refers to a port from the 'port' submodule of the 'hub' module, indicating the port on the Lego SPIKE the sensor is plugged in to.
 'color(port)' returns an integer coresponding to the constant associated with a color from the 'color' module. The port argument is the same concept as described above.
 
 The 'color' module is a module which contains constants pertaining to certain colors, and contains no functions.

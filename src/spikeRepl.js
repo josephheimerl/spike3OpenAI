@@ -46,7 +46,7 @@ export default class spikeRepl {
 
     clearCode() {
         this.logString = '';
-        this.writeToRepl(this.logString);
+        window.pyrepl.rawWrite = "\r\n";
     }
 
     inputBoxCallback(event) {
@@ -99,7 +99,7 @@ export default class spikeRepl {
     <div id="replContainer">
       <pre id="replWindow">Connect SPIKE to view REPL</pre>
     </div>
-    <input type="text" id="repl-input" placeholder="Input to REPL">
+    <input type="text" id="repl-input" placeholder="Input to REPL" autocorrect="off">
     <button id="ctrlC" class="generic button">ctrlC (Abort)</button>
     <button id="clear-repl" class="generic button">Clear REPL</button>
     <button id="scroll-with-gen" class="generic button selected">Scroll With Generation</button>

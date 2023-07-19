@@ -130,7 +130,7 @@ async function sendCommandToGPT() {
       body: JSON.stringify({
         messages: messages,
         temperature: 0,
-        token: await loginWidget.userIDToken()
+        token: await loginWidget.userIDToken(),
       }),
       headers: {
         "Content-type": "application/json; charset=UTF-8"

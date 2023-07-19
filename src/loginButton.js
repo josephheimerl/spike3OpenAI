@@ -56,8 +56,6 @@ export default class loginButton {
 
         onAuthStateChanged(this.auth, (user => {
             if (user) {
-                console.log("user");
-                console.log(user);
                 const uid = user.uid;
                 this.user = user;
                 this.loginStatus = true;
