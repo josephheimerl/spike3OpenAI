@@ -27,6 +27,10 @@
     padding:0;
     background-color: #f5f2f0;
 }
+#repl-input {
+    width: 100%;
+    box-sizing: border-box;
+}
 
 .generic.button.selected {
     transition: background-color 0s ease;

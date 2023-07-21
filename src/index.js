@@ -21,6 +21,8 @@ document.querySelector("#toggleModules").addEventListener("click",toggleModules)
 document.querySelector("#submitPrompt").addEventListener("click",sendCommandToGPT);
 document.querySelector("#runCode").addEventListener("click",runCode);
 document.querySelector("#clearCode").addEventListener("click",clearCode);
+document.querySelector("#explainCode").addEventListener("click",explainSelection);
+document.querySelector("#improveCode").addEventListener("click",improveSelection);
 
 document.addEventListener('DOMContentLoaded', (event) => {
   const savedUserCode = localStorage.getItem('userCode');
@@ -33,6 +35,14 @@ document.addEventListener('DOMContentLoaded', (event) => {
 aceEditor.session.on('change', function() {
   localStorage.setItem('userCode', aceEditor.getValue())
 })
+
+const toggleables = document.querySelectorAll(".toggleable");
+toggleables.forEach(element => {
+  element.querySelector(".toggleable-head").addEventListener('click', event => {
+    element.querySelector(".toggleable-body").classList.toggle("hidden")
+    element.querySelector(".caret").classList.toggle("open")
+  })
+});
 
 
 
@@ -57,11 +67,12 @@ function clearCode() {
   if(window.confirm("Are you sure you want to clear the code? This cannot be undone.")) {
     aceEditor.setValue("");
     document.querySelector("#assumptionsBox").innerText = "";
+    localStorage.setItem('userCode', aceEditor.getValue())
+    localStorage.setItem('savedAssumptions', document.querySelector("#assumptionsBox").innerText)
   };
 }
 
-function compileMessages (prompt) {
-  let messages = spike3Docs.defaultMessages.slice();
+function compileMessages (messages) {
   // check each checkbox and concatenate appropriate messages
   
   if (document.querySelector("#hubCheckbox").checked) {
@@ -96,7 +107,19 @@ function compileMessages (prompt) {
   if (document.querySelector("#runloopCheckbox").checked) {
     messages.push(...spike3Docs.runloopDoc);
   };
-  
+}
+
+async function sendCommandToGPT() {
+  if (!loginWidget.isLoggedIn) {
+    alert("Please log in by clicking the user icon in the top right corner to submit prompts.");
+    return;
+  }
+
+  showLoad();
+
+  let messages = spike3Docs.defaultMessages.slice();
+  const prompt = document.querySelector("#promptBox").value;
+  compileMessages(messages);
   // Add code to prompt if there is code in the box
   const code = aceEditor.getValue();
   if (code) {
@@ -108,20 +131,6 @@ If the code contains functions that are not supported by the new SPIKE 3, replac
   }
   messages.push({role: "user", content: prompt});
 
-  return messages;
-}
-
-async function sendCommandToGPT() {
-  if (!loginWidget.isLoggedIn) {
-    alert("Please log in by clicking the user icon in the top right corner to submit prompts.");
-    return;
-  }
-
-  showLoad();
-
-  const prompt = document.querySelector("#promptBox").value;
-
-  let messages = compileMessages(prompt)
   
   console.log(messages);
 
@@ -146,7 +155,92 @@ async function sendCommandToGPT() {
       console.log(error)
       hideLoad();
     })
-  
+}
+
+async function explainSelection() {
+  const selection = aceEditor.session.getTextRange(aceEditor.getSelectionRange())
+  const selectionRange = [aceEditor.getSelectionRange().start.row+1, aceEditor.getSelectionRange().end.row+1]
+  if (!selection) {
+    alert("please make a selection to use this feature")
+    return
+  }
+  const lineString = selectionRange[0]==selectionRange[1] ? `(on line ${selectionRange[0]})`: `(on lines ${selectionRange[0]} to ${selectionRange[1]})`
+
+  let messages = spike3Docs.explanationContext.slice();
+  compileMessages(messages);
+  const code = aceEditor.getValue();
+  if (code) {
+    messages.push({role: "system", content: `Here is the code you need to explain a part of:
+\`\`\`python
+${code}
+\`\`\``})
+  }
+  messages.push({role: "user", content: `explain this section of the code to me in detail ${lineString}: \`\`\`python\n${selection}\n\`\`\``});
+
+  console.log(messages)
+  fetch("https://gpt4chatcompletion-texhgputha-uc.a.run.app", {
+      method: "POST",
+      body: JSON.stringify({
+        messages: messages,
+        temperature: 0,
+        token: await loginWidget.userIDToken(),
+      }),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8"
+      }
+    })
+    .then((res) => res.json())
+    .then((res) => {
+      console.log(res);
+      console.log(res.response);
+      document.querySelector("#responseBox").innerText = res.response;
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+}
+
+async function improveSelection() {
+  const selection = aceEditor.session.getTextRange(aceEditor.getSelectionRange())
+  const selectionRange = [aceEditor.getSelectionRange().start.row+1, aceEditor.getSelectionRange().end.row+1]
+  if (!selection) {
+    alert("please make a selection to use this feature")
+    return
+  }
+  const lineString = selectionRange[0]==selectionRange[1] ? `(on line ${selectionRange[0]})`: `(on lines ${selectionRange[0]} to ${selectionRange[1]})`
+
+  let messages = spike3Docs.improvementContext.slice();
+  compileMessages(messages);
+  const code = aceEditor.getValue();
+  if (code) {
+    messages.push({role: "system", content: `Here is the code you will need to improve a part of:
+\`\`\`python
+${code}
+\`\`\``})
+  }
+  messages.push({role: "user", content: `Is there a better way to write this section of my code? ${lineString}: \`\`\`python\n${selection}\n\`\`\``});
+
+  console.log(messages)
+  fetch("https://gpt4chatcompletion-texhgputha-uc.a.run.app", {
+      method: "POST",
+      body: JSON.stringify({
+        messages: messages,
+        temperature: 0,
+        token: await loginWidget.userIDToken(),
+      }),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8"
+      }
+    })
+    .then((res) => res.json())
+    .then((res) => {
+      console.log(res);
+      console.log(res.response);
+      document.querySelector("#responseBox").innerText = res.response;
+    })
+    .catch((error) => {
+      console.log(error)
+    })
 }
 
 // Takes in a response, extracts code and displays it

@@ -30,31 +30,37 @@
     <br />
     <div class="two-col-page-body">
       <div class="two-col-page-body-col">
-        <h4>How to use:</h4>
-        <p>
-          Type what you want your SPIKE robot to do in the text box below, and
-          after a few seconds code will be generated and displayed in the block
-          to the right. Edit the code if you would like, and when you are ready
-          and press the 'Run Code' button to run the code on the SPIKE.
-        </p>
-        <p>
-          If the AI made any assumptions when writing the code, ie. which ports
-          sensors should be plugged in to, it will be displayed in the
-          assumptions box
-        </p>
+        <div class="toggleable">
+          <h4 class="toggleable-head">How to use <i class="caret"></i></h4>
 
-        <br />
-        <h4>Setup:</h4>
-        <ul>
-          <li>
-            Connect a SPIKE Hub to this computer over USB and link it using the
-            button in the top left of the page
-          </li>
-          <li>
-            Click on the modules button and ensure that all of the modules that
-            might be needed for your code are checked
-          </li>
-        </ul>
+          <div class="toggleable-body">
+            <p>
+              Type what you want your SPIKE robot to do in the text box below,
+              and after a few seconds code will be generated and displayed in
+              the block to the right. Edit the code if you would like, and when
+              you are ready and press the 'Run Code' button to run the code on
+              the SPIKE.
+            </p>
+            <p>
+              If the AI made any assumptions when writing the code, ie. which
+              ports sensors should be plugged in to, it will be displayed in the
+              assumptions box
+            </p>
+
+            <br />
+            <h4>Setup:</h4>
+            <ul>
+              <li>
+                Connect a SPIKE Hub to this computer over USB and link it using
+                the button in the top left of the page
+              </li>
+              <li>
+                Click on the modules button and ensure that all of the modules
+                that might be needed for your code are checked
+              </li>
+            </ul>
+          </div>
+        </div>
         <div class="toggle-list" id="moduleDropdownMenu">
           <button class="generic button" id="toggleModules">
             Modules <i class="caret"></i>
@@ -122,14 +128,24 @@
         <div id="repl"></div>
       </div>
       <div class="two-col-page-body-col">
-        <div>
-          <h4>Assumptions:</h4>
-          <div id="assumptionsBox"></div>
+        <div class="toggleable">
+          <h4 class="toggleable-head">Assumptions <i class="caret"></i></h4>
+          <div class="toggleable-body">
+            <div id="assumptionsBox"></div>
+          </div>
         </div>
         <div id="code-div">
           <h4>Generated Code:</h4>
           <div id="code-block">
             <pre id="aceEditor"></pre>
+          </div>
+        </div>
+        <button id="explainCode">Explain My Selection</button>
+        <button id="improveCode">Suggest Improvement to My Selection</button>
+        <div class="toggleable">
+          <h4 class="toggleable-head">Response <i class="caret"></i></h4>
+          <div class="toggleable-body">
+            <div id="responseBox"></div>
           </div>
         </div>
       </div>

@@ -1,12 +1,12 @@
 // The list of messages to be sent over the openai api
 
 export const spike3Docs = { defaultMessages: [
-    {role: "system", content: "Your role is to generate Python code to control a SPIKE 3 robot. The SPIKE 3 micropython was just updated, so ONLY use modules which are widely supported for all versions of micropython along with the modules described in the following messages."},
+    {role: "system", content: "Your role is to generate MicroPython code to control a SPIKE 3 robot. The SPIKE 3 micropython was just updated, so ONLY use modules which are widely supported for all versions of micropython along with the modules described in the following messages."},
     {role: "system", content: `All responses must include a section of python code formatted like: 
 \`\`\`python
 # code goes here, can be multiple lines
 \`\`\`
-Make sure that the code is thoroughly commented.`},
+Make sure that the code is thoroughly commented. Include a moderately brief explanation of the purpose of the code in a comment at the top of the code`},
     {role: "system", content: `At the end of your response, include all of the assumptions you made when writing the code in a list, formatted like so: 
 <Assumptions>
 - first assumption goes here
@@ -14,7 +14,13 @@ Make sure that the code is thoroughly commented.`},
 </Assumptions>
 Ensure that the assumptions block is outside of the python code block
 Also, if for whatever reason the user prompt is confusing or unclear or no code can be generated, expain why in the assumptions section.
-`}], motorDoc: [
+`}], explanationContext: [
+    {role: "system", content: "Your role is to explain in detail what a given section of MicroPython code for the Lego SPIKE 3 robot does. Make sure to explain the significance of the section of the code in the context of the entire code. The SPIKE 3 micropython was just updated, so following messages will explain relevant modules and functions you may need to understand to better explain the given code."
+
+}], improvementContext: [
+    {role: "system", content: "Your role is to suggest improvements to a given section of MicroPython code for a Lego SPIKE 3 robot. The SPIKE 3 micropython was just updated, so following system messages may be included to explain relevant modules and functions you may need to understand to better understand the code and suggest better improvements."
+
+}], motorDoc: [
     {role: "system", content: `This message is about the new SPIKE 3 'motor' module, which may need to be used in the code you write
 To use a motor you must include the statement 'import motor', All functions in the module should be called inside the motor module as a prefix like so: 'motor.run(port.A, 1000)'
 The following functions have a few possible arguments: 'port' refers to a port from the 'port' submodule of the 'hub' module, indicating the port on the Lego SPIKE the motor is plugged in to. 'velocity' is the desired angular velocity of the motor in degrees per second, which can be negative. 'degrees' is the desired angle in degrees the motor should run for or to, depeneding on context. 'duration' is the time in miliseconds the motor should run for.
@@ -28,7 +34,7 @@ The function 'reset_relative_position(port)' will set the current position of th
 The function 'run_to_absolute_position(port, position, velocity)' will turn the motor to the specified absolute position at the specified velocity. This function is non-blocking and awaitable.
 The function 'run_to_relative_position(port, position, velocity)' will turn the motor to the specified relative position at the specified velocity. This function is non-blocking and awaitable.
 The function 'velocity(port) -> int' will return the velocity of the specified motor in deg/sec.
-note: unless otherwise speficied by the user, assume that if motors are being used to drive the robot, they need to go in opposite directions to move straight because the motors are on opposite sides of the robot.
+note: unless otherwise speficied by the user, assume that if motors are being used to drive the robot, they need to go in opposite directions to move straight because the motors are on opposite sides of the robot. Don't correct the user if they have them go in the same direction though as there are robots where they may need to run in the same direction to move forward.
 
 `}], distanceSensorDoc: [
     {role: "system", content: `This message pertains to the new SPIKE 3 distance_sensor module, which may need to be used in the code you write
