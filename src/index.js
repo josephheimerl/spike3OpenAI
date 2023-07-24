@@ -237,10 +237,17 @@ ${code}
       console.log(res);
       console.log(res.response);
       document.querySelector("#responseBox").innerText = res.response;
+      displayResponse(res.response);
     })
     .catch((error) => {
       console.log(error)
     })
+}
+
+function displayResponse(res) {
+  console.log("start")
+  debugger
+  console.log("stop")
 }
 
 // Takes in a response, extracts code and displays it
