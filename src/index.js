@@ -12,7 +12,7 @@ textArea.addEventListener('input', function() {
 const replWindow = new spikeRepl("repl");
 const loginWidget = new loginButton("sign-in");
 
-var aceEditor = ace.edit("aceEditor");
+let aceEditor = ace.edit("aceEditor");
 aceEditor.setTheme("ace/theme/chrome");
 aceEditor.session.setMode("ace/mode/python");
 
@@ -109,6 +109,21 @@ function compileMessages (messages) {
   };
 }
 
+async function fetchAI(messages) {
+  return fetch("https://gpt4chatcompletion-texhgputha-uc.a.run.app", {
+      method: "POST",
+      body: JSON.stringify({
+        messages: messages,
+        temperature: 0,
+        token: await loginWidget.userIDToken(),
+      }),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8"
+      }
+    })
+    .then((res) => res.json())
+}
+
 async function sendCommandToGPT() {
   if (!loginWidget.isLoggedIn) {
     alert("Please log in by clicking the user icon in the top right corner to submit prompts.");
@@ -116,6 +131,7 @@ async function sendCommandToGPT() {
   }
 
   showLoad();
+  aceEditor.setReadOnly(true)
 
   let messages = spike3Docs.defaultMessages.slice();
   const prompt = document.querySelector("#promptBox").value;
@@ -134,26 +150,17 @@ If the code contains functions that are not supported by the new SPIKE 3, replac
   
   console.log(messages);
 
-  fetch("https://gpt4chatcompletion-texhgputha-uc.a.run.app", {
-      method: "POST",
-      body: JSON.stringify({
-        messages: messages,
-        temperature: 0,
-        token: await loginWidget.userIDToken(),
-      }),
-      headers: {
-        "Content-type": "application/json; charset=UTF-8"
-      }
-    })
-    .then((res) => res.json())
+  fetchAI(messages)
     .then((res) => {
       console.log(res);
       displayCode(res.response);
       hideLoad();
+      aceEditor.setReadOnly(false)
     })
     .catch((error) => {
       console.log(error)
       hideLoad();
+      aceEditor.setReadOnly(false)
     })
 }
 
@@ -178,29 +185,23 @@ ${code}
   messages.push({role: "user", content: `explain this section of the code to me in detail ${lineString}: \`\`\`python\n${selection}\n\`\`\``});
 
   console.log(messages)
-  fetch("https://gpt4chatcompletion-texhgputha-uc.a.run.app", {
-      method: "POST",
-      body: JSON.stringify({
-        messages: messages,
-        temperature: 0,
-        token: await loginWidget.userIDToken(),
-      }),
-      headers: {
-        "Content-type": "application/json; charset=UTF-8"
-      }
-    })
-    .then((res) => res.json())
+
+  showLoad()
+  fetchAI(messages)
     .then((res) => {
+      hideLoad()
       console.log(res);
       console.log(res.response);
-      document.querySelector("#responseBox").innerText = res.response;
+      displayResponse(res.response);
     })
     .catch((error) => {
+      hideLoad()
       console.log(error)
     })
 }
 
 async function improveSelection() {
+
   const selection = aceEditor.session.getTextRange(aceEditor.getSelectionRange())
   const selectionRange = [aceEditor.getSelectionRange().start.row+1, aceEditor.getSelectionRange().end.row+1]
   if (!selection) {
@@ -221,33 +222,83 @@ ${code}
   messages.push({role: "user", content: `Is there a better way to write this section of my code? ${lineString}: \`\`\`python\n${selection}\n\`\`\``});
 
   console.log(messages)
-  fetch("https://gpt4chatcompletion-texhgputha-uc.a.run.app", {
-      method: "POST",
-      body: JSON.stringify({
-        messages: messages,
-        temperature: 0,
-        token: await loginWidget.userIDToken(),
-      }),
-      headers: {
-        "Content-type": "application/json; charset=UTF-8"
-      }
-    })
-    .then((res) => res.json())
+  showLoad()
+  fetchAI(messages)
     .then((res) => {
+      hideLoad()
       console.log(res);
-      console.log(res.response);
-      document.querySelector("#responseBox").innerText = res.response;
+      console.log(res.response);;
       displayResponse(res.response);
     })
     .catch((error) => {
+      hideLoad()
       console.log(error)
     })
 }
 
+let displayEditors = [];
 function displayResponse(res) {
+  //response element
+  const responseBox = document.querySelector("#responseBox");
+
   console.log("start")
-  debugger
-  console.log("stop")
+  const parsedArray = res.match(/```python|```|(?<=^|```python|```)[\s\S]*?(?=$|```python|```)/g);
+  //destroy old editors
+  displayEditors.forEach((editor) => {
+    editor.destroy()
+    editor.container.remove()
+  });
+
+  //empty editor list and innerhtml
+  displayEditors = [];
+  responseBox.innerHTML = '';
+
+  //iterate through response array
+  let numEditors = 0;
+  let codeMode = false;
+  parsedArray.forEach((string) => {
+    string = string.trim();
+    if (string == "```python") {
+        codeMode = true;
+      } else if (string == "```") {
+        codeMode = false;
+      } else if (codeMode) {
+        //make container element
+        const newCodeBlock = document.createElement("div");
+        newCodeBlock.className = "responseBox-code";
+        newCodeBlock.id = `responseBox-code${numEditors}`;
+        responseBox.appendChild(newCodeBlock);
+        numEditors+=1;
+
+        //insert and configure new ace editor
+        let newEditor = ace.edit(newCodeBlock.id)
+        newEditor.setTheme("ace/theme/chrome");
+        newEditor.session.setMode("ace/mode/python");
+        newEditor.setReadOnly(true);
+
+        //push editor onto list
+        displayEditors.push(newEditor);
+
+        //place code in editor
+        newEditor.setValue(string)
+
+        //adjust height of editor after render
+        setTimeout(() => {
+          const lineHeight = newEditor.renderer.lineHeight;
+          console.log(lineHeight)
+          const newHeight = lineHeight * newEditor.session.getLength();
+          console.log(newHeight)
+          newEditor.container.style.height = newHeight.toString() + "px";
+          newEditor.resize()
+        }, 0);
+
+      } else if (!codeMode) {
+        //append plain text
+        const newText = document.createTextNode(string);
+        responseBox.appendChild(newText);
+      }
+  });
+  console.log("stop");
 }
 
 // Takes in a response, extracts code and displays it
@@ -286,11 +337,13 @@ function runCode() {
 // Shows a loading icon and disables the submit prompt button
 function showLoad() {
   document.querySelector("#submitPrompt").disabled = true;
-  aceEditor.setReadOnly(true);
+  document.querySelector("#explainCode").disabled = true;
+  document.querySelector("#improveCode").disabled = true;;
 }
 
 // Hides loading icon when execution has stopped
 function hideLoad() {
   document.querySelector("#submitPrompt").disabled = false;
-  aceEditor.setReadOnly(false);
+  document.querySelector("#explainCode").disabled = false;
+  document.querySelector("#improveCode").disabled = false;
 }
