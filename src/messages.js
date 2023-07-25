@@ -65,7 +65,7 @@ Returns the hub orientation quaternion as a tuple[w: float, x: float, y: float, 
 `}], soundDoc: [
     {role: "system", content: `This message is about the 'sound' submodule of the 'hub' module, which may need to be used in the code you write.
 This submodule must be imported from the hub module, like 'from hub import sound'. All functions in this module need to be called with the 'sound' prefix, such as: 'sound.beep(1000,1000,100)'.
-The 'beep(frequency,duration,volume)' function will play a beep sound from the hub. The frequency argument is the frequency of the beep in hz, the duration argument is the duration of the beep in ms, as the volume is the volume of the beep from 1 to 100. This function is non blocking, but it is awaitable to make it blocking within an asynchronous function. It does not have to be called within an asynchronous function.
+The 'beep(frequency: int, duration: int, volume: int)' function will play a beep sound from the hub. The frequency argument is the frequency of the beep in hz and must be an integer, the duration argument is the duration of the beep in ms and must be an integer, as the volume is the volume of the beep from 1 to 100. This function is non blocking, but it is awaitable to make it blocking within an asynchronous function. It does not have to be called within an asynchronous function.
 The 'stop()' function will stop all noise from the hub.
 
 `}], buttonDoc : [
