@@ -285,9 +285,8 @@ function displayResponse(res) {
         //adjust height of editor after render
         setTimeout(() => {
           const lineHeight = newEditor.renderer.lineHeight;
-          console.log(lineHeight)
-          const newHeight = lineHeight * newEditor.session.getLength();
-          console.log(newHeight)
+          let newHeight = lineHeight * newEditor.session.getLength();
+          newHeight = newHeight == 0 ? 100 : newHeight;
           newEditor.container.style.height = newHeight.toString() + "px";
           newEditor.resize()
         }, 0);
