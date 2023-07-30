@@ -150,7 +150,7 @@ If the code contains functions that are not supported by the new SPIKE 3, replac
   
   console.log(messages);
 
-  fetchAI(messages)
+  const fetchPromise = fetchAI(messages)
     .then((res) => {
       console.log(res);
       displayCode(res.response);
@@ -162,6 +162,8 @@ If the code contains functions that are not supported by the new SPIKE 3, replac
       hideLoad();
       aceEditor.setReadOnly(false)
     })
+  
+  splashElement("code-block", fetchPromise)
 }
 
 async function explainSelection() {
@@ -187,7 +189,7 @@ ${code}
   console.log(messages)
 
   showLoad()
-  fetchAI(messages)
+  const fetchPromise = fetchAI(messages)
     .then((res) => {
       hideLoad()
       console.log(res);
@@ -198,6 +200,7 @@ ${code}
       hideLoad()
       console.log(error)
     })
+  splashElement("responseBox-container", fetchPromise)
 }
 
 async function improveSelection() {
@@ -223,7 +226,7 @@ ${code}
 
   console.log(messages)
   showLoad()
-  fetchAI(messages)
+  const fetchPromise = fetchAI(messages)
     .then((res) => {
       hideLoad()
       console.log(res);
@@ -234,6 +237,7 @@ ${code}
       hideLoad()
       console.log(error)
     })
+  splashElement("responseBox-container", fetchPromise)
 }
 
 let displayEditors = [];
@@ -345,4 +349,26 @@ function hideLoad() {
   document.querySelector("#submitPrompt").disabled = false;
   document.querySelector("#explainCode").disabled = false;
   document.querySelector("#improveCode").disabled = false;
+}
+
+// Throws loading spash element over specified element. Requires a promise
+// to be passed which will indicate when the splash should be removed
+async function splashElement(elementID, endPromise) {
+  const parentElement = document.getElementById(elementID);
+  const splash = document.createElement("div");
+  splash.className = "splashElement";
+  parentElement.appendChild(splash);
+  
+  const loadText = document.createTextNode("Loading ");
+  splash.appendChild(loadText);
+
+  const loadingSpinner = document.createElement("div");
+  loadingSpinner.className = "splashElement-loader";
+  splash.appendChild(loadingSpinner);
+
+  await endPromise;
+  
+  for (let elem of [loadingSpinner, loadText, splash]) {
+    elem.remove();
+  }
 }
