@@ -65,7 +65,7 @@ body {
 .toggleable-body {
   max-height: 1000px;
   overflow: hidden;
-  transition: max-height 0.3s ease;
+  transition: max-height 0.3s ease-in-out;
 }
 .toggleable-body.hidden {
   max-height: 0;
