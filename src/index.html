@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Command SPIKE w/ GPT</title>
+    <title>AI Assisted Code Editor</title>
     <link rel="stylesheet" href="styles.css" />
     <link rel="stylesheet" href="loginButton.css" />
     <link rel="stylesheet" href="spikeRepl.css" />
@@ -22,7 +22,9 @@
       <div id="bar" class="top-bar"></div>
       <div id="title-bar" , class="title-bar">
         <div id="root"></div>
-        <h1 id="title" class="center-title">Command SPIKE w/ GPT</h1>
+        <h1 id="title" class="center-title">
+          AI Assisted Code Editor for LEGO SPIKE Prime
+        </h1>
         <div id="sign-in" data-hover="Sign in"></div>
       </div>
     </div>
@@ -35,30 +37,43 @@
 
           <div class="toggleable-body">
             <p>
+              Before doing anything, sign in to Google using the user icon on
+              the right side of the head bar, and connect to your SPIKE Prime by
+              plugging it in to a serial port and clicking the icon on the left.
+            </p>
+            <b>
+              Make sure any modules your robot may need to import are checked in
+              the module dropdown before submiting your prompt
+            </b>
+            <p>
               Type what you want your SPIKE robot to do in the text box below,
               and after a few seconds code will be generated and displayed in
-              the block to the right. Edit the code if you would like, and when
-              you are ready and press the 'Run Code' button to run the code on
-              the SPIKE.
+              the code editor to the right. If modules are imported which don't
+              work for SPIKE 3, ensure the necessary modules are checked in the
+              modules dropdown, clear the code, and resubmit your prompt.
+            </p>
+            <p>
+              If there is code in the editor at the time a prompt is submitted,
+              the AI will attempt to use work off the existing code in its
+              generation. This allows you to give prompts which reference your
+              code directly, but means if you want to have a completely fresh
+              generation you must clear your code first.
+            </p>
+            <p>
+              Edit the code if you would like, and when you are ready and press
+              the 'Run Code' button to run the code on the SPIKE.
             </p>
             <p>
               If the AI made any assumptions when writing the code, ie. which
               ports sensors should be plugged in to, it will be displayed in the
               assumptions box
             </p>
-
-            <br />
-            <h4>Setup:</h4>
-            <ul>
-              <li>
-                Connect a SPIKE Hub to this computer over USB and link it using
-                the button in the top left of the page
-              </li>
-              <li>
-                Click on the modules button and ensure that all of the modules
-                that might be needed for your code are checked
-              </li>
-            </ul>
+            <p>
+              The buttons below the code editor allow you to highlight a portion
+              of your existing code and have either an explanation or
+              improvement to your selection generate in the response block below
+              the coding block.
+            </p>
           </div>
         </div>
         <div class="toggle-list" id="moduleDropdownMenu">
