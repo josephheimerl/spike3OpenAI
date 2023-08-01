@@ -184,7 +184,7 @@ async function explainSelection() {
 ${code}
 \`\`\``})
   }
-  messages.push({role: "user", content: `explain this section of the code to me in detail ${lineString}: \`\`\`python\n${selection}\n\`\`\``});
+  messages.push({role: "user", content: `explain this section of the code to me ${lineString}: \`\`\`python\n${selection}\n\`\`\``});
 
   console.log(messages)
 
@@ -244,8 +244,6 @@ let displayEditors = [];
 function displayResponse(res) {
   //response element
   const responseBox = document.querySelector("#responseBox");
-
-  console.log("start")
   const parsedArray = res.match(/```python|```|(?<=^|```python|```)[\s\S]*?(?=$|```python|```)/g);
   //destroy old editors
   displayEditors.forEach((editor) => {
@@ -293,7 +291,7 @@ function displayResponse(res) {
           newHeight = newHeight == 0 ? 100 : newHeight;
           newEditor.container.style.height = newHeight.toString() + "px";
           newEditor.resize()
-        }, 0);
+        }, 500);
 
       } else if (!codeMode) {
         //append plain text
@@ -301,7 +299,6 @@ function displayResponse(res) {
         responseBox.appendChild(newText);
       }
   });
-  console.log("stop");
 }
 
 // Takes in a response, extracts code and displays it
