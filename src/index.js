@@ -222,7 +222,7 @@ async function improveSelection() {
 ${code}
 \`\`\``})
   }
-  messages.push({role: "user", content: `Is there a better way to write this section of my code? ${lineString}: \`\`\`python\n${selection}\n\`\`\``});
+  messages.push({role: "user", content: `Give suggestions for better ways to write this section of my code: ${lineString}: \`\`\`python\n${selection}\n\`\`\``});
 
   console.log(messages)
   showLoad()
