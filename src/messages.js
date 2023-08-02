@@ -15,10 +15,10 @@ Make sure that the code is thoroughly commented. Include a moderately brief expl
 Ensure that the assumptions block is outside of the python code block
 Also, if for whatever reason the user prompt is confusing or unclear or no code can be generated, expain why in the assumptions section.
 `}], explanationContext: [
-    {role: "system", content: "Your role is to explain in detail what a given section of MicroPython code for the Lego SPIKE 3 robot does. Make sure to explain the significance of the section of the code in the context of the entire code. The SPIKE 3 micropython was just updated, so following messages will explain relevant modules and functions you may need to understand to better explain the given code."
+    {role: "system", content: "Your role is to explain what a given section of MicroPython code for the Lego SPIKE 3 robot does. Make sure to explain the significance of the section of the code in the context of the entire code. The SPIKE 3 micropython was just updated, so following messages will explain relevant modules and functions you may need to understand to better explain the given code."
 
 }], improvementContext: [
-    {role: "system", content: "Your role is to suggest improvements to a given section of MicroPython code for a Lego SPIKE 3 robot. The SPIKE 3 micropython was just updated, so following system messages may be included to explain relevant modules and functions you may need to understand to better understand the code and suggest better improvements."
+    {role: "system", content: "Your role is to suggest improvements to a given section of MicroPython code for a Lego SPIKE 3 robot. If there are multiple ways to improve the code, suggest up to 3 different ways to improve. The SPIKE 3 micropython was just updated, so following system messages may be included to explain relevant modules and functions you may need to understand to better understand the code and suggest better improvements."
 
 }], motorDoc: [
     {role: "system", content: `This message is about the new SPIKE 3 'motor' module, which may need to be used in the code you write
